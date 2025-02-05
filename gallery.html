@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            scroll-behavior: smooth;
+            font-family: 'Comic Sans MS', 'Comic Sans', cursive;
+            background: url('k2.webp') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff; 
+            margin: 0;
+            padding: 0;
+            transition: background-position 0.1s ease-in-out;
+        }
+        nav, .settings-panel, .container, .digital-photography, .photo-gallery img, .welcome-notification, .warning-message {
+            transition: all 0.3s ease-in-out;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            margin: 0 15px;
+        }
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        nav ul li a:hover {
+            color: #00f;
+        }
+        .settings-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            z-index: 1002;
+            font-size: 24px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .settings-panel {
+            display: none;
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1002;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .settings-panel h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+        .settings-panel label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .settings-panel input,
+        .settings-panel select {
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+        }
+        .settings-panel button {
+            width: 100%;
+            padding: 10px;
+            background: #00f;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .settings-panel button:hover {
+            background: #0056b3;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            margin-top: 100px;
+        }
+        .digital-photography {
+            position: relative;
+            margin: 30px;
+            flex: 1 1 calc(33.333% - 60px);
+            box-sizing: border-box;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+        }
+        .digital-photography:hover {
+            transform: scale(1.05);
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
+        }
+        .photo-gallery img {
+            width: 100%;
+            max-width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .photo-gallery img:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .welcome-notification {
+            position: fixed;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            animation: slideDown 1s forwards, fadeOut 1s 9s forwards;
+            z-index: 1001;
+        }
+        .welcome-notification::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, #00f, #00f);
+            animation: progressBar 10s linear forwards;
+            border-radius: 0 0 10px 10px;
+        }
+        @keyframes slideDown {
+            from { top: -50px; opacity: 0; }
+            to { top: 40px; opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        @keyframes progressBar {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @media (max-width: 768px) {
+            .digital-photography {
+                flex: 1 1 calc(50% - 40px);
+            }
+        }
+        @media (max-width: 480px) {
+            .digital-photography {
+                flex: 1 1 calc(100% - 40px);
+            }
+            nav ul li {
+                margin: 0 10px;
+            }
+            nav ul li a {
+                font-size: 16px;
+            }
+            .settings-icon {
+                font-size: 20px;
+            }
+        }
+        .warning-message {
+            display: none;
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 1003;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1004;
+        }
+        .modal .content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            overflow: auto;
+        }
+        .modal .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 30px;
+            color: #000;
+            cursor: pointer;
+        }
+        .blurred {
+            filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-notification">Welcome to Gallery</div>
+    <div class="warning-message" id="warning-message">Oops, you're already here!</div>
+    <nav>
+        <ul>
+            <li><a href="home.html" onclick="checkCurrentPage(event, 'home.html')">Home</a></li>
+            <li><a href="gallery.html" onclick="checkCurrentPage(event, 'gallery.html')">Gallery</a></li>
+        </ul>
+    </nav>
+    <i class="fa-solid fa-gear settings-icon" onclick="toggleSettings()"></i>
+    <div class="settings-panel">
+        <h3>Settings</h3>
+        <label for="box-size">Box Size:</label>
+        <input type="range" id="box-size" min="100" max="500" value="300" onchange="updateBoxSize(this.value)">
+        <label for="box-color">Box Blur Color:</label>
+        <input type="color" id="box-color" value="#000000" onchange="updateBoxBlurColor(this.value)">
+        <label for="font-family">Font Family:</label>
+        <select id="font-family" onchange="updateFontFamily(this.value)">
+            <option value="'Comic Sans MS', 'Comic Sans', cursive">Comic Sans</option>
+            <option value="Arial, sans-serif">Arial</option>
+            <option value="'Times New Roman', Times, serif">Times New Roman</option>
+        </select>
+        <label for="notification-color">Notification Color:</label>
+        <input type="color" id="notification-color" value="#000000" onchange="updateNotificationColor(this.value)">
+        <label for="notification-duration">Notification Duration (seconds):</label>
+        <input type="number" id="notification-duration" min="1" max="20" value="10" onchange="updateNotificationDuration(this.value)">
+        <button onclick="resetSettings()">Reset</button>
+    </div>
+    <main>
+        <div class="container">
+            <section class="digital-photography backdrop-blur-small">
+                <h2>Favorite Photo of Myself</h2>
+                <div class="photo-gallery">
+                    <img src="me.jpg" alt="Photo 1">
+                </div>
+                <p>My favorite photo of myself when I was a child.</p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>A Photo That Embodies My Childhood</h2>
+                <div class="photo-gallery">
+                    <img src="childhood.jpg" alt="Photo 1">
+                </div>
+                <p>I am different from others, I love nature, climbing, medicine. Because I usually stick around with 3 things. I am so interested into climbing mountains, watching surgery videos and learn from them. I love nature so much!</p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>A Photo of My Favorite Place</h2>
+                <div class="photo-gallery">
+                    <img src="hos.jpg" alt="Photo 1">
+                </div>
+                <p>I love people and its my most favorite place, I enjoy doing kind things in the emergency department. As this place holds the kindest and nicest nurses, that's why it's the best and favorite place.</p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>A Photo That I Took/Captured</h2>
+                <div class="photo-gallery">
+                    <img src="itook.jpg" alt="Photo 1">
+                </div>
+                <p>One of my top tier photos I captured, during july of 2024. This was at a beach I would say one of the best sunsets I've ever captured. Golden hour moment, I have plenty of sunsets, sunrises photos. It was a good background with the ocean and waves.</p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>A Photo That Evokes an Emotion</h2>
+                <div class="photo-gallery">
+                    <img src="annapurna.jpg" alt="Photo 1">
+                </div>
+                <p>Don't know how to describe it, but this special mountain is very hard to climb. Every two people who summit one dies trying. As this mountain has avalanches, rock falls, and very steep pitches. Making this mountain very hard to climb and most people attempt climbing die. </p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>A Black and White Photo That I Love</h2>
+                <div class="photo-gallery">
+                    <img src="mh.jpg" alt="Photo 1">
+                </div>
+                <p>This is the best black and white photo I ever found, it matches the style, but I really like it as it shows the mountain. Credits to the orginally owner.</p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>A Professional Photo That Captured My Attention</h2>
+                <div class="photo-gallery">
+                    <img src="k2.webp" alt="Photo 1">
+                </div>
+                <p>Worlds hardest mountain, known as K2 every 4 people who summit 1 dies trying. My dream to climb this mountain always my favorite mountain. It belongs at this catagory because the mountain has beautiful sharp edges.</p>
+            </section>
+            <section class="digital-photography backdrop-blur-small">
+                <h2>Quad</h2>
+                <div class="photo-gallery">
+                    <img src="quad.jpg" alt="Photo 1">
+                </div>
+                <p>This is an extra photo, I really love quads because you can speed, do jumps, do trails anything. It's also very fun with snow, if it snows on the road then you can have plenty of fun</p>
+            </section>
+        </div>
+    </main>
+    <div class="modal" id="imageModal">
+        <div class="content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    <script>
+        function toggleSettings() {
+            const panel = document.querySelector('.settings-panel');
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function updateBoxSize(size) {
+            document.querySelectorAll('.digital-photography').forEach(box => {
+                box.style.flex = `1 1 calc(${size}px - 60px)`;
+            });
+        }
+
+        function updateBoxBlurColor(color) {
+            document.querySelectorAll('.digital-photography').forEach(box => {
+                box.style.background = `rgba(${hexToRgb(color)}, 0.5)`;
+            });
+        }
+
+        function updateFontFamily(font) {
+            document.body.style.fontFamily = font;
+        }
+
+        function updateNotificationColor(color) {
+            document.querySelector('.welcome-notification').style.backgroundColor = color;
+        }
+
+        function updateNotificationDuration(duration) {
+            const notification = document.querySelector('.welcome-notification');
+            notification.style.animation = `slideDown 1s forwards, fadeOut 1s ${duration - 1}s forwards`;
+            document.querySelector('.welcome-notification::after').style.animation = `progressBar ${duration}s linear forwards`;
+        }
+
+        function resetSettings() {
+            document.getElementById('box-size').value = 300;
+            document.getElementById('box-color').value = '#000000';
+            document.getElementById('font-family').value = "'Comic Sans MS', 'Comic Sans', cursive";
+            document.getElementById('notification-color').value = '#000000';
+            document.getElementById('notification-duration').value = 10;
+
+            updateBoxSize(300);
+            updateBoxBlurColor('#000000');
+            updateFontFamily("'Comic Sans MS', 'Comic Sans', cursive");
+            updateNotificationColor('#000000');
+            updateNotificationDuration(10);
+        }
+
+        function checkCurrentPage(event, page) {
+            if (window.location.pathname.endsWith(page)) {
+                event.preventDefault();
+                const warningMessage = document.getElementById('warning-message');
+                warningMessage.style.display = 'block';
+                setTimeout(() => {
+                    warningMessage.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            return `${(bigint >> 16) & 255}, ${(bigint >> 8) & 255}, ${bigint & 255}`;
+        }
+
+        document.addEventListener("mousemove", function(event) {
+            const body = document.body;
+            const height = window.innerHeight;
+            const width = window.innerWidth;
+            const moveX = (event.clientX / width) * 25;
+            const moveY = (event.clientY / height) * 25;
+            body.style.backgroundPosition = `${moveX}% ${moveY}%`;
+        });
+
+        document.querySelectorAll('.digital-photography').forEach(box => {
+            box.addEventListener('click', function() {
+                const modal = document.getElementById('imageModal');
+                const modalContent = document.getElementById('modalContent');
+                modalContent.innerHTML = this.innerHTML;
+                modal.style.display = 'flex';
+                document.querySelectorAll('.digital-photography').forEach(b => b.classList.add('blurred'));
+                this.classList.remove('blurred');
+                this.style.flex = '1 1 100%';
+                document.body.style.color = '#000'; 
+            });
+        });
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            document.querySelectorAll('.digital-photography').forEach(box => {
+                box.classList.remove('blurred');
+                box.style.flex = '1 1 calc(33.333% - 60px)';
+            });
+            document.body.style.color = '#fff'; 
+        }
+    </script>
+</body>
+</html>
